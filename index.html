@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>CLIPFORGE AI — 100% Free In-Browser Gaming Highlight & Shorts Maker</title>
+  <meta name="description" content="Turn gaming sessions into viral 9:16 vertical shorts, TikToks & Reels. 100% in-browser video processing, audio peak detection, punchline captions, and MP4 export. $0 forever, no signups, no uploads.">
+  <meta name="theme-color" content="#080B11">
+  <meta property="og:title" content="CLIPFORGE AI — Free In-Browser Gaming Shorts Maker">
+  <meta property="og:description" content="Local gaming highlight detection, 9:16 vertical crop with blurred wings, punchline captions, and MP4 exports directly on your Android phone or PC.">
+  <meta property="og:type" content="website">
+
+  <!-- Cross-Origin Isolation for FFmpeg.wasm multithreading support on GitHub Pages -->
+  <script src="coi-serviceworker.min.js"></script>
+
+  <!-- Google Fonts: Inter & Orbitron for sleek gaming aesthetic -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Pinned FFmpeg.wasm 0.11.6 for optional client-side WebAssembly transcoding -->
+  <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow glow-top-left" aria-hidden="true"></div>
+  <div class="ambient-glow glow-bottom-right" aria-hidden="true"></div>
+
+  <!-- Global Header & Navigation -->
+  <header class="app-header">
+    <div class="header-container">
+      <a href="#" class="brand-logo" aria-label="ClipForge AI Home">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">CLIPFORGE</span>
+          <span class="brand-badge">AI</span>
+        </div>
+      </a>
+
+      <div class="header-status-pill">
+        <span class="status-dot"></span>
+        <span class="status-label">100% In-Browser &bull; $0 Free</span>
+      </div>
+
+      <nav class="header-nav">
+        <a href="#studio" class="nav-link active">Studio</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#how-it-works" class="nav-link">How It Works</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+        <a href="https://github.com/Asad-j8/clipforge-ai" target="_blank" rel="noopener noreferrer" class="nav-btn-github" aria-label="GitHub Repository">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+          <span class="mobile-hide">GitHub</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-container">
+      <div class="hero-badge">
+        <span class="badge-icon">🎮</span>
+        <span>Built for Gaming Creators & Streamers</span>
+      </div>
+      <h1 class="hero-title">
+        Turn Raw Gaming Footage into <span class="text-gradient">Viral Shorts</span> in Seconds
+      </h1>
+      <p class="hero-subtitle">
+        Intelligent audio-peak detection, smart 9:16 vertical framing with blurred wings, gaming punchlines, and real video exports — executed <strong>entirely inside your browser</strong>. Zero subscriptions. No video uploads. 100% free forever.
+      </p>
+
+      <div class="hero-cta-group">
+        <a href="#studio" class="btn btn-primary btn-glow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          Launch ClipForge Studio
+        </a>
+        <button id="heroDemoBtn" class="btn btn-secondary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Try Sample Gameplay Demo
+        </button>
+      </div>
+
+      <!-- Live Trust Metrics -->
+      <div class="trust-grid">
+        <div class="trust-item">
+          <div class="trust-icon">🛡️</div>
+          <div class="trust-content">
+            <h4>100% Device-Local</h4>
+            <p>Your gameplay never leaves your phone or computer</p>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon">⚡</div>
+          <div class="trust-content">
+            <h4>Audio-Peak Scanner</h4>
+            <p>Finds hype screams, gunshots, explosions & hype</p>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon">📱</div>
+          <div class="trust-content">
+            <h4>Android Optimized</h4>
+            <p>Smooth touch controls & memory-safe processing</p>
+          </div>
+        </div>
+        <div class="trust-item">
+          <div class="trust-icon">💸</div>
+          <div class="trust-content">
+            <h4>$0 Free MVP</h4>
+            <p>No paywalls, no watermark extortion, no signups</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Application Studio -->
+  <main id="studio" class="studio-section">
+    <div class="studio-container">
+
+      <!-- Section Header -->
+      <div class="section-header">
+        <div class="header-left">
+          <h2 class="section-title">Gaming Video Studio</h2>
+          <p class="section-desc">Load your gameplay clip, detect action peaks, customize framing & punchline, and export.</p>
+        </div>
+        <div class="header-actions">
+          <button id="resetAllBtn" class="btn btn-outline btn-sm" title="Clear current session and reset everything" style="display: none;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+            Reset Studio
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 1: Upload & File Ingestion Dropzone -->
+      <div id="dropzoneCard" class="card dropzone-card">
+        <div class="dropzone-inner" id="dropzone">
+          <input type="file" id="videoFileInput" accept="video/mp4,video/webm,video/quicktime,video/x-matroska" class="file-input-hidden">
+          
+          <div class="dropzone-visual">
+            <div class="dropzone-glow-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75">
+                <rect x="2" y="2" width="20" height="20" rx="4"></rect>
+                <polygon points="10 8 16 12 10 16 10 8"></polygon>
+              </svg>
+            </div>
+            <div class="pulse-ring"></div>
+          </div>
+
+          <h3 class="dropzone-heading">Drop your gaming video here</h3>
+          <p class="dropzone-sub">Supports MP4, WebM, or MOV clips from OBS, GeForce Experience, or mobile screen recorders.</p>
+
+          <div class="dropzone-buttons">
+            <label for="videoFileInput" class="btn btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              Browse Gaming Video
+            </label>
+            <button id="loadDemoSampleBtn" type="button" class="btn btn-secondary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+              Load Demo Gameplay
+            </button>
+          </div>
+
+          <!-- Privacy & Limitations reassurance banner -->
+          <div class="privacy-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <span><strong>Zero Cloud Uploads:</strong> Video processing is 100% computed inside your browser RAM. Recommended video length: 15s - 15min for optimal mobile performance.</span>
+          </div>
+        </div>
+
+        <!-- Video Metadata Strip (Visible after video load) -->
+        <div id="videoMetaStrip" class="video-meta-strip" style="display: none;">
+          <div class="meta-item">
+            <span class="meta-label">File:</span>
+            <span id="metaFileName" class="meta-val highlight-val">-</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Size:</span>
+            <span id="metaFileSize" class="meta-val">-</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Duration:</span>
+            <span id="metaDuration" class="meta-val">-</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Resolution:</span>
+            <span id="metaResolution" class="meta-val">-</span>
+          </div>
+          <div class="meta-item meta-safety" id="metaSafetyBadge">
+            <span class="safety-indicator dot-safe"></span>
+            <span id="metaSafetyText">Mobile Optimized</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Studio Workspace (Hidden until video loaded) -->
+      <div id="studioWorkspace" class="studio-workspace" style="display: none;">
+
+        <!-- Toolbar: Aspect Ratio, Duration & Detection Settings -->
+        <div class="card settings-card">
+          <div class="settings-grid">
+            
+            <!-- Aspect Ratio -->
+            <div class="setting-group">
+              <label class="setting-label">
+                <span>Aspect Ratio</span>
+                <span class="label-hint">Target output format</span>
+              </label>
+              <div class="pill-selector" id="aspectRatioSelector">
+                <button type="button" class="pill-btn active" data-aspect="9:16">
+                  <span class="pill-icon">📱</span>
+                  <span>9:16 Shorts / TikTok</span>
+                </button>
+                <button type="button" class="pill-btn" data-aspect="16:9">
+                  <span class="pill-icon">🖥️</span>
+                  <span>16:9 YouTube</span>
+                </button>
+                <button type="button" class="pill-btn" data-aspect="1:1">
+                  <span class="pill-icon">🔲</span>
+                  <span>1:1 Square</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Framing Mode for 9:16 -->
+            <div class="setting-group" id="framingModeGroup">
+              <label class="setting-label">
+                <span>9:16 Framing Style</span>
+                <span class="label-hint">How 16:9 game fits in 9:16</span>
+              </label>
+              <div class="pill-selector" id="framingSelector">
+                <button type="button" class="pill-btn active" data-framing="blur" title="Atmospheric blurred gaming wings on top & bottom with crisp center gameplay">
+                  <span class="pill-icon">✨</span>
+                  <span>Blurred Wings</span>
+                </button>
+                <button type="button" class="pill-btn" data-framing="crop" title="Direct zoom into center action zone">
+                  <span class="pill-icon">🔍</span>
+                  <span>Center Crop</span>
+                </button>
+                <button type="button" class="pill-btn" data-framing="fit" title="Neat dark letterbox">
+                  <span class="pill-icon">⬛</span>
+                  <span>Fit Letterbox</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Target Clip Length -->
+            <div class="setting-group">
+              <label class="setting-label" for="clipDurationSelect">
+                <span>Clip Target Length</span>
+                <span class="label-hint">Ideal highlight window</span>
+              </label>
+              <select id="clipDurationSelect" class="form-select">
+                <option value="15">15 Seconds (Ultra-Fast Snackable)</option>
+                <option value="30" selected>30 Seconds (Balanced Hype Moment)</option>
+                <option value="45">45 Seconds (Extended Action Play)</option>
+                <option value="60">60 Seconds (Full Clutch / Round)</option>
+              </select>
+            </div>
+
+            <!-- Number of Clips -->
+            <div class="setting-group">
+              <label class="setting-label" for="clipCountSelect">
+                <span>Highlights to Detect</span>
+                <span class="label-hint">Peak suggestion count</span>
+              </label>
+              <select id="clipCountSelect" class="form-select">
+                <option value="1">1 Top Peak</option>
+                <option value="3" selected>3 Action Peaks</option>
+                <option value="5">5 Highlights</option>
+                <option value="8">8 Highlights</option>
+              </select>
+            </div>
+
+          </div>
+
+          <!-- Highlight Scan Trigger -->
+          <div class="scanner-action-bar">
+            <button id="scanHighlightsBtn" type="button" class="btn btn-primary btn-glow">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+              Scan Audio Peaks &amp; Action Highlights
+            </button>
+            <div class="scanner-note">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              <span>Uses Web Audio RMS decibel peaks (screams, gunshots, explosions) & visual motion sample diffing.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Waveform & Audio Peak Visualization Card -->
+        <div class="card waveform-card" id="waveformCard">
+          <div class="card-header-flex">
+            <div>
+              <h3 class="card-heading">Audio Decibel Waveform &amp; Action Timeline</h3>
+              <p class="card-subheading">Interactive peak map. Purple/cyan markers indicate detected action peaks. Tap anywhere to seek.</p>
+            </div>
+            <div class="playback-badge" id="playbackTimeBadge">00:00.0 / 00:00.0</div>
+          </div>
+
+          <!-- Interactive Waveform Canvas Container -->
+          <div class="waveform-container" id="waveformContainer">
+            <canvas id="waveformCanvas" width="1000" height="110"></canvas>
+            <div id="waveformPlayhead" class="waveform-playhead" style="left: 0%;"></div>
+            <div id="waveformHighlightOverlay" class="waveform-selection-overlay" style="left: 0%; width: 0%;"></div>
+          </div>
+
+          <div class="waveform-legend">
+            <span class="legend-item"><span class="legend-color legend-audio"></span> Audio Volume Curve</span>
+            <span class="legend-item"><span class="legend-color legend-peak"></span> Detected Action Peak</span>
+            <span class="legend-item"><span class="legend-color legend-clip"></span> Selected Clip Window</span>
+          </div>
+        </div>
+
+        <!-- Highlight Suggestions Deck -->
+        <div class="card highlights-card" id="highlightsCard">
+          <div class="card-header-flex">
+            <div>
+              <h3 class="card-heading">Suggested Action Highlights</h3>
+              <p class="card-subheading">Algorithmic estimates based on audio volume bursts & visual scene changes. Tap any card to preview.</p>
+            </div>
+            <span class="badge-tag">Heuristic Estimates</span>
+          </div>
+
+          <!-- Highlight Cards Grid -->
+          <div id="highlightsGrid" class="highlights-grid">
+            <div class="empty-highlights-state">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+              </svg>
+              <p>Click <strong>"Scan Audio Peaks &amp; Action Highlights"</strong> above to auto-detect the most intense moments in your gameplay.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video Studio & Real-time Render Preview -->
+        <div class="studio-two-col">
+          
+          <!-- Column 1: Source Gameplay Video & Trimmer Controls -->
+          <div class="card studio-col-card">
+            <div class="card-header-flex">
+              <h3 class="card-heading">1. Source Video &amp; Trimmer</h3>
+              <span class="badge-tag" id="clipDurationBadge">Selected: 30.0s</span>
+            </div>
+
+            <!-- Source Video Player -->
+            <div class="player-container">
+              <video id="sourceVideo" playsinline preload="metadata" controls></video>
+            </div>
+
+            <!-- Trimmer Fine-Tuning Controls -->
+            <div class="trimmer-controls">
+              
+              <div class="time-inputs-row">
+                <div class="time-input-box">
+                  <label for="startTimeInput">Clip Start</label>
+                  <div class="input-with-nudges">
+                    <button type="button" class="nudge-btn" id="startMinus1" title="-1s">-1s</button>
+                    <button type="button" class="nudge-btn" id="startMinus01" title="-0.1s">-0.1s</button>
+                    <input type="text" id="startTimeInput" class="time-field" value="00:00.0">
+                    <button type="button" class="nudge-btn" id="startPlus01" title="+0.1s">+0.1s</button>
+                    <button type="button" class="nudge-btn" id="startPlus1" title="+1s">+1s</button>
+                  </div>
+                </div>
+
+                <div class="time-input-box">
+                  <label for="endTimeInput">Clip End</label>
+                  <div class="input-with-nudges">
+                    <button type="button" class="nudge-btn" id="endMinus1" title="-1s">-1s</button>
+                    <button type="button" class="nudge-btn" id="endMinus01" title="-0.1s">-0.1s</button>
+                    <input type="text" id="endTimeInput" class="time-field" value="00:30.0">
+                    <button type="button" class="nudge-btn" id="endPlus01" title="+0.1s">+0.1s</button>
+                    <button type="button" class="nudge-btn" id="endPlus1" title="+1s">+1s</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Clip Action Buttons -->
+              <div class="trimmer-actions">
+                <button type="button" id="previewClipBtn" class="btn btn-secondary btn-sm">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                  </svg>
+                  Play Selected Segment
+                </button>
+                <button type="button" id="setStartCurrentBtn" class="btn btn-outline btn-sm">
+                  Set Start at Playhead
+                </button>
+                <button type="button" id="setEndCurrentBtn" class="btn btn-outline btn-sm">
+                  Set End at Playhead
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Column 2: Live Export Render Preview (9:16 Shorts View) -->
+          <div class="card studio-col-card">
+            <div class="card-header-flex">
+              <h3 class="card-heading">2. Live Export Preview</h3>
+              <span class="badge-tag live-badge">WYSIWYG Output</span>
+            </div>
+
+            <!-- Canvas Render Preview with framing & burned captions -->
+            <div class="canvas-preview-box" id="canvasPreviewBox">
+              <canvas id="previewCanvas" width="720" height="1280"></canvas>
+              <div class="canvas-aspect-indicator" id="aspectIndicatorBadge">9:16 Vertical</div>
+            </div>
+
+            <div class="preview-tips">
+              <p>💡 What you see here is exactly what gets encoded into your final downloadable video file.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Manual Gaming Punchline & Caption Studio -->
+        <div class="card caption-card">
+          <div class="card-header-flex">
+            <div>
+              <h3 class="card-heading">3. Gaming Punchline &amp; Caption Studio</h3>
+              <p class="card-subheading">Add high-energy gaming titles or punchlines (burned directly onto exported video frames). 100% offline & editable.</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="enableCaptionsToggle" checked>
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Enable Caption</span>
+            </label>
+          </div>
+
+          <div id="captionControlsBody" class="caption-controls-body">
+            
+            <!-- Caption Text Input -->
+            <div class="caption-input-row">
+              <label for="captionTextInput" class="setting-label">Punchline Text</label>
+              <div class="caption-input-wrapper">
+                <input type="text" id="captionTextInput" class="caption-input" placeholder="e.g. INSANE 1v4 CLUTCH!! 🔥" value="INSANE 1v4 CLUTCH!! 🔥" maxlength="60">
+              </div>
+            </div>
+
+            <!-- Quick Gaming Presets -->
+            <div class="caption-presets-row">
+              <span class="presets-title">Quick Presets:</span>
+              <div class="preset-chips">
+                <button type="button" class="preset-chip" data-preset="INSANE 1v4 CLUTCH!! 🔥">🔥 1v4 CLUTCH</button>
+                <button type="button" class="preset-chip" data-preset="NO WAY HE HIT THAT! 💀">💀 NO WAY</button>
+                <button type="button" class="preset-chip" data-preset="200 IQ GRENADE 🧠">🧠 200 IQ PLAY</button>
+                <button type="button" class="preset-chip" data-preset="WAIT FOR THE END... 😱">😱 WAIT FOR IT</button>
+                <button type="button" class="preset-chip" data-preset="GOD TIER FLICK SHOT 🎯">🎯 GOD TIER AIM</button>
+                <button type="button" class="preset-chip" data-preset="HOW DID I SURVIVE?! 🛡️">🛡️ SURVIVED</button>
+              </div>
+            </div>
+
+            <!-- Caption Styling & Position Grid -->
+            <div class="caption-style-grid">
+              
+              <!-- Style Theme -->
+              <div class="setting-group">
+                <label class="setting-label">Caption Style</label>
+                <div class="pill-selector" id="captionThemeSelector">
+                  <button type="button" class="pill-btn active" data-style="neon-yellow">
+                    <span class="color-dot bg-yellow"></span> Neon Yellow
+                  </button>
+                  <button type="button" class="pill-btn" data-style="cyber-cyan">
+                    <span class="color-dot bg-cyan"></span> Cyber Cyan
+                  </button>
+                  <button type="button" class="pill-btn" data-style="danger-red">
+                    <span class="color-dot bg-red"></span> Danger Red
+                  </button>
+                  <button type="button" class="pill-btn" data-style="clean-white">
+                    <span class="color-dot bg-white"></span> Clean White
+                  </button>
+                </div>
+              </div>
+
+              <!-- Position -->
+              <div class="setting-group">
+                <label class="setting-label">Vertical Position</label>
+                <div class="pill-selector" id="captionPosSelector">
+                  <button type="button" class="pill-btn" data-pos="top">Top (Safe)</button>
+                  <button type="button" class="pill-btn active" data-pos="center">Center Drama</button>
+                  <button type="button" class="pill-btn" data-pos="bottom">Bottom Third</button>
+                </div>
+              </div>
+
+              <!-- Font Size -->
+              <div class="setting-group">
+                <label class="setting-label">Font Size</label>
+                <div class="pill-selector" id="captionSizeSelector">
+                  <button type="button" class="pill-btn" data-size="medium">Medium</button>
+                  <button type="button" class="pill-btn active" data-size="large">Bold Hype</button>
+                  <button type="button" class="pill-btn" data-size="xlarge">Massive</button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Export & Processing Control Deck -->
+        <div class="card export-card">
+          <div class="card-header-flex">
+            <div>
+              <h3 class="card-heading">4. Export Engine &amp; Download</h3>
+              <p class="card-subheading">Choose your processing pipeline. 100% computed on-device.</p>
+            </div>
+            <span class="badge-tag badge-ready">Ready to Encode</span>
+          </div>
+
+          <!-- Engine Switcher & Explanations -->
+          <div class="engine-selector-box">
+            <div class="engine-options">
+              
+              <label class="engine-radio-label active" id="engineNativeLabel">
+                <input type="radio" name="exportEngine" value="native" checked>
+                <div class="engine-content">
+                  <div class="engine-title-row">
+                    <span class="engine-name">⚡ Native Browser Pipeline (Recommended)</span>
+                    <span class="engine-badge badge-green">Fastest &bull; 0MB Download</span>
+                  </div>
+                  <p class="engine-desc">
+                    Uses Canvas 2D + Web Audio API + MediaRecorder. Instant rendering, zero WebAssembly download, 100% compatible with Android Chrome and mobile browsers without memory crashes.
+                  </p>
+                </div>
+              </label>
+
+              <label class="engine-radio-label" id="engineWasmLabel">
+                <input type="radio" name="exportEngine" value="wasm">
+                <div class="engine-content">
+                  <div class="engine-title-row">
+                    <span class="engine-name">🔬 FFmpeg.wasm Engine</span>
+                    <span class="engine-badge badge-purple">WebAssembly Transcoder</span>
+                  </div>
+                  <p class="engine-desc">
+                    Client-side FFmpeg WebAssembly build. Precise frame trimming and standard MP4 remuxing. Note: Requires ~25MB one-time WASM download; best on PC or high-RAM Android devices.
+                  </p>
+                </div>
+              </label>
+
+            </div>
+          </div>
+
+          <!-- Export Action Center -->
+          <div class="export-actions-bar">
+            <button id="startExportBtn" type="button" class="btn btn-primary btn-lg btn-glow">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Export Selected Clip (<span id="exportClipLenSpan">30.0s</span>)
+            </button>
+
+            <div class="export-spec-summary">
+              <span>Format: <strong id="exportSpecFormat">9:16 Vertical MP4</strong></span>
+              <span>&bull;</span>
+              <span>Framing: <strong id="exportSpecFraming">Blurred Wings</strong></span>
+              <span>&bull;</span>
+              <span>Captions: <strong id="exportSpecCaptions">Active</strong></span>
+            </div>
+          </div>
+
+          <!-- Export Progress & Status Box (Shown during export) -->
+          <div id="exportProgressBox" class="export-progress-box" style="display: none;">
+            <div class="progress-header">
+              <span class="progress-title" id="progressStatusText">Encoding video frames...</span>
+              <span class="progress-pct" id="progressPctText">0%</span>
+            </div>
+
+            <div class="progress-bar-track">
+              <div id="exportProgressBar" class="progress-bar-fill" style="width: 0%;"></div>
+            </div>
+
+            <div class="progress-meta-row">
+              <span id="progressDetailsText">Initializing browser encoder...</span>
+              <button type="button" id="cancelExportBtn" class="btn btn-outline btn-xs">Cancel Export</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Exported Clips Showcase Deck -->
+        <div id="exportedClipsSection" class="card exported-card" style="display: none;">
+          <div class="card-header-flex">
+            <div>
+              <h3 class="card-heading">🎉 Your Exported Clips</h3>
+              <p class="card-subheading">Click download to save directly to your Android device or computer.</p>
+            </div>
+            <button id="clearExportsBtn" type="button" class="btn btn-outline btn-xs">Clear List</button>
+          </div>
+
+          <div id="exportedClipsGrid" class="exported-grid">
+            <!-- Dynamically populated exported cards -->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Feature Highlights Section -->
+  <section id="features" class="features-section">
+    <div class="section-container">
+      <div class="section-title-wrap">
+        <span class="sub-badge">Zero Cost &bull; Maximum Quality</span>
+        <h2 class="section-title">Engineered Specifically for Gaming Creators</h2>
+        <p class="section-desc">Everything you need to turn hours of gameplay streams into punchy vertical content for TikTok, Shorts, and Reels.</p>
+      </div>
+
+      <div class="features-grid">
+        
+        <div class="feature-card">
+          <div class="feature-icon-box cyan-glow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </div>
+          <h3 class="feature-name">Audio Peak Decibel Scanner</h3>
+          <p class="feature-text">
+            Detects scream reactions, discord banter, sniper headshots, and high decibel explosions using browser-native Web Audio analysis. Real peak curves, not fake random numbers.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box purple-glow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+              <line x1="12" y1="18" x2="12.01" y2="18"></line>
+            </svg>
+          </div>
+          <h3 class="feature-name">Smart 9:16 Blurred Wings</h3>
+          <p class="feature-text">
+            Never post tiny shrunken gameplay. ClipForge mirrors your gameplay onto atmospheric blurred top and bottom wings, keeping your HUD and crosshair perfectly centered.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box green-glow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <h3 class="feature-name">Zero Server Uploads &amp; Complete Privacy</h3>
+          <p class="feature-text">
+            Commercial cloud clippers upload your gigabytes of footage to remote servers. ClipForge processes everything 100% inside your browser memory. No data ever leaves your device.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box yellow-glow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="4 7 4 4 20 4 20 7"></polyline>
+              <line x1="9" y1="20" x2="15" y2="20"></line>
+              <line x1="12" y1="4" x2="12" y2="20"></line>
+            </svg>
+          </div>
+          <h3 class="feature-name">Offline Punchline Captions</h3>
+          <p class="feature-text">
+            Add high-energy gaming punchlines ("INSANE 1v4 CLUTCH!!") with customizable gaming styles (Neon Yellow, Cyber Cyan, Danger Red). Burned directly onto the video frames.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box pink-glow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polygon points="10 8 16 12 10 16 10 8"></polygon>
+            </svg>
+          </div>
+          <h3 class="feature-name">Dual Encoding Pipelines</h3>
+          <p class="feature-text">
+            Choose between lightning-fast Canvas MediaRecorder (instant, zero download, mobile-friendly) or FFmpeg.wasm for precision WebAssembly transcoding where supported.
+          </p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-box blue-glow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="1" x2="12" y2="23"></line>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+          </div>
+          <h3 class="feature-name">Zero Cost &bull; Free Forever</h3>
+          <p class="feature-text">
+            No \$29/month subscriptions, no trial countdowns, no export limits, and no watermark extortion. Pure client-side open source technology deployed on static GitHub Pages.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section id="how-it-works" class="how-section">
+    <div class="section-container">
+      <div class="section-title-wrap">
+        <span class="sub-badge">Workflow</span>
+        <h2 class="section-title">How ClipForge Works Under The Hood</h2>
+        <p class="section-desc">Four transparent steps from raw gaming session to ready-to-post short.</p>
+      </div>
+
+      <div class="steps-flow">
+        
+        <div class="step-card">
+          <div class="step-number">01</div>
+          <h3 class="step-title">Load Local Gameplay</h3>
+          <p class="step-text">Drop your MP4 or WebM recording. The browser reads the file directly from your local filesystem without transmitting a single byte over the internet.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">02</div>
+          <h3 class="step-title">Decibel &amp; Motion Scan</h3>
+          <p class="step-text">ClipForge decodes the audio track via the Web Audio API to detect loud spikes (screams, gunshots, hype moments) and visual frame movement.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">03</div>
+          <h3 class="step-title">Crop &amp; Punchline</h3>
+          <p class="step-text">Select 9:16 Shorts with blurred background wings. Fine-tune start and end timestamps down to 100ms. Add an energetic punchline title.</p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-number">04</div>
+          <h3 class="step-title">In-Browser Render</h3>
+          <p class="step-text">Your browser encodes the composite video and audio stream into a clean MP4/WebM file ready for instant download and mobile sharing.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Android & Device Reality Guide -->
+  <section class="device-guide-section">
+    <div class="section-container">
+      <div class="guide-box">
+        <div class="guide-header">
+          <div class="guide-icon">📱</div>
+          <div>
+            <h3 class="guide-title">Android Phone &amp; Low-Memory Device Guide</h3>
+            <p class="guide-sub">Practical tips for smooth client-side video clipping on mobile devices.</p>
+          </div>
+        </div>
+
+        <div class="guide-tips-grid">
+          <div class="guide-tip-card">
+            <h4>⚡ Use the Native Pipeline</h4>
+            <p>On mobile phones, choose <strong>"Native Browser Pipeline"</strong> (the default). It uses minimal RAM and encodes without downloading heavy WebAssembly binaries.</p>
+          </div>
+          <div class="guide-tip-card">
+            <h4>📦 Video File Size Advice</h4>
+            <p>For phones with 4GB - 6GB RAM, clips under 200MB (approx 5 to 15 minutes of gameplay) process smoothly. For longer recordings, trim raw footage first.</p>
+          </div>
+          <div class="guide-tip-card">
+            <h4>🔋 Keep Screen Active</h4>
+            <p>Do not switch tabs or lock your phone during the export process. Mobile browsers pause background tabs to save battery, which pauses video rendering.</p>
+          </div>
+          <div class="guide-tip-card">
+            <h4>🛡️ Browser Recommendation</h4>
+            <p>Works best on modern Google Chrome for Android, Samsung Internet, or Brave Browser with hardware video decoding enabled.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Transparent Limitations & FAQ Section -->
+  <section id="faq" class="faq-section">
+    <div class="section-container">
+      <div class="section-title-wrap">
+        <span class="sub-badge">Honest Architecture</span>
+        <h2 class="section-title">Frequently Asked Questions &amp; Limitations</h2>
+        <p class="section-desc">Clear answers on how a 100% free, client-side video SaaS works.</p>
+      </div>
+
+      <div class="faq-accordion">
+        
+        <details class="faq-item" open>
+          <summary class="faq-question">
+            <span>Is ClipForge AI really 100% free with no hidden charges?</span>
+            <span class="faq-chevron">&darr;</span>
+          </summary>
+          <div class="faq-answer">
+            <p><strong>Yes, 100% free forever.</strong> Commercial tools charge \$20 to \$50 per month because they upload your gigabytes of videos to expensive cloud servers (AWS/GCP) and pay per minute for cloud GPU rendering. ClipForge eliminates server costs entirely by executing all rendering directly on your own device's CPU/GPU inside your browser.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>Are my private gaming videos uploaded anywhere?</span>
+            <span class="faq-chevron">&darr;</span>
+          </summary>
+          <div class="faq-answer">
+            <p><strong>Never.</strong> ClipForge has zero backend servers, zero databases, and zero tracking endpoints. When you select a video, it is accessed strictly through the browser's local File API and processed in your device's memory. Even if your internet disconnects after loading the page, ClipForge continues to work offline.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>How does the highlight detection work? Is it "real AI"?</span>
+            <span class="faq-chevron">&darr;</span>
+          </summary>
+          <div class="faq-answer">
+            <p>We are completely transparent: ClipForge uses an <strong>honest heuristic audio-peak and motion detection algorithm</strong>. It samples the audio track using the browser's native Web Audio API, calculates RMS volume decibels to pinpoint scream reactions, gunfire, and explosive spikes, and combines this with video frame motion differences. We do not pretend to have a magical cloud neural network; instead, we give you transparent excitement scores and let you easily preview and adjust the timestamps before exporting.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>Can I publish this on GitHub Pages for free?</span>
+            <span class="faq-chevron">&darr;</span>
+          </summary>
+          <div class="faq-answer">
+            <p><strong>Yes!</strong> This entire application consists of static HTML, CSS, and Vanilla JavaScript, with a service worker (`coi-serviceworker.min.js`) included to ensure Cross-Origin Isolation headers on GitHub Pages. You can host it for free on your GitHub repository with zero server fees.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>Why did my export fail or run slowly on a 2-hour 4K recording?</span>
+            <span class="faq-chevron">&darr;</span>
+          </summary>
+          <div class="faq-answer">
+            <p>Web browsers have a hard memory ceiling (typically 1GB to 2GB RAM per tab on mobile Android, up to 4GB on desktop). A raw 2-hour 4K video requires massive RAM to decode in browser memory. For best results on mobile, use clips under 15 minutes and 1080p or 720p resolution.</p>
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span>Can I add custom captions and gaming punchlines?</span>
+            <span class="faq-chevron">&darr;</span>
+          </summary>
+          <div class="faq-answer">
+            <p>Yes! We built a dedicated Offline Punchline Studio. You can type custom hooks (e.g., "NO WAY HE HIT THAT! 💀"), choose from gaming presets, pick custom styling (Neon Yellow, Cyber Cyan, Danger Red), and burn the text directly into your exported 9:16 Shorts.</p>
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <div class="footer-brand-col">
+        <div class="footer-logo">
+          <span class="brand-name">CLIPFORGE</span>
+          <span class="brand-badge">AI</span>
+        </div>
+        <p class="footer-tagline">The 100% Free, Device-Local Gaming Highlight &amp; Shorts Maker.</p>
+        <p class="footer-legal">Zero subscriptions. Zero server storage. Open source MIT.</p>
+      </div>
+
+      <div class="footer-links-col">
+        <h4 class="footer-heading">Product</h4>
+        <a href="#studio">Gaming Studio</a>
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#faq">FAQ &amp; Limitations</a>
+      </div>
+
+      <div class="footer-links-col">
+        <h4 class="footer-heading">Open Source</h4>
+        <a href="https://github.com/Asad-j8/clipforge-ai" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+        <a href="https://github.com/Asad-j8/clipforge-ai/blob/main/README.md" target="_blank" rel="noopener noreferrer">Documentation</a>
+        <a href="https://github.com/Asad-j8/clipforge-ai/issues" target="_blank" rel="noopener noreferrer">Report an Issue</a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-bottom-container">
+        <span>&copy; 2026 CLIPFORGE AI &bull; Built with HTML5 Canvas, Web Audio API &amp; FFmpeg.wasm</span>
+        <span>Hosted 100% Free on GitHub Pages</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
